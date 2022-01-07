@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pass the Secret</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="index.ts" type="module"></script>
+</head>
+<body class="relative w-screen h-screen p-24 grid justify-items-center text-gray-700">
+
+<!-- Create secret section -->
+<section id="create-secret-section" class="hidden p-6 w-full max-w-xl flex flex-col rounded shadow bg-white">
+  <fieldset class="grow flex flex-col">
+    <textarea data-id="secret" placeholder="Enter your secret here" class="form-input mb-4 resize-none grow"></textarea>
+    <button data-id="show-password-generator" type="button" class="form-button-link -mt-4 mb-4 self-end text-sm">
+      Password generator
+    </button>
+    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 justify-between">
+      <label class="space-x-1">
+        <span>Keep for</span>
+        <select data-id="days" class="form-input">
+          <option value="1">1 day</option>
+          <option value="2">2 days</option>
+          <option value="3" selected>3 days</option>
+          <option value="4">4 days</option>
+          <option value="5">5 days</option>
+          <option value="6">6 days</option>
+          <option value="7">7 days</option>
+        </select>
+      </label>
+      <button data-id="create-secret" type="submit" class="form-button">Submit</button>
+    </div>
+  </fieldset>
+  <div data-id="browser-encryption-unavailable-warning" class="hidden mt-4 -mb-2 text-xs text-red-600">
+    Browser encryption is not available. Less secure server-side encryption will be used instead.
+  </div>
+</section>
+
+<!-- Show secret link section -->
+<section id="secret-link-section" class="hidden m-auto p-6 max-w-lg flex flex-col rounded shadow bg-white">
+  <textarea data-id="link" class="form-input resize-none mb-1 px-3 py-2 grow" rows="3" readonly></textarea>
+  <div class="mb-4 text-xs">
+    It is a one-time link to your secret. The link can be followed only once and will not open the second time. Pass it
+    to the recipient.
+  </div>
+  <button data-id="copy-link" type="button" title="Copy" class="form-button self-center flex items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-1"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+    </svg>
+    <span>Copy</span>
+  </button>
+</section>
+
+<!-- Show secret contents section -->
+<section id="secret-contents-section" class="hidden p-6 w-full max-w-xl flex flex-col rounded shadow bg-white">
+  <textarea data-id="secret" class="form-input resize-none mb-1 px-3 py-2 grow" readonly></textarea>
+  <div class="mb-4 text-xs">
+    Here is your secret. It has already been removed from the server.
+  </div>
+  <button data-id="copy-secret" type="button" title="Copy" class="form-button self-center flex items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-1"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+    </svg>
+    <span>Copy</span>
+  </button>
+</section>
+
+<!-- Fatal error section -->
+<section id="fatal-error-section" class="hidden m-auto max-w-lg flex flex-col rounded shadow bg-white">
+  <h1 class="px-6 py-3 text-white text-xl font-bold tracking-wide bg-red-600 rounded-t">Oops!</h1>
+  <div data-id="error-text" class="px-6 py-6">Something went horribly wrong!</div>
+</section>
+
+<!-- Password generator section -->
+<section id="password-generator-section" class="hidden absolute w-full h-full grid bg-gray-900/50">
+  <div class="m-auto rounded shadow bg-white">
+    <h1 class="px-6 py-3 text-white text-xl font-bold tracking-wide bg-indigo-600 rounded-t">Password generator</h1>
+    <fieldset class="px-6 py-6 space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 grid-flow-row gap-2">
+        <label class="space-x-1">
+          <input data-id="lowercase-letters" class="form-checkbox" type="checkbox" checked>
+          <span>Lowercase letters</span>
+        </label>
+        <label class="space-x-1">
+          <input data-id="uppercase-letters" class="form-checkbox" type="checkbox" checked>
+          <span>Uppercase letters</span>
+        </label>
+        <label class="space-x-1">
+          <input data-id="digits" class="form-checkbox" type="checkbox" checked>
+          <span>Digits</span>
+        </label>
+        <label class="space-x-1">
+          <input data-id="special-characters" class="form-checkbox" type="checkbox" checked>
+          <span>Special characters</span>
+        </label>
+      </div>
+      <label class="block space-x-1">
+        <span>Password length</span>
+        <input data-id="password-length" type="number" min="8" max="30" value="12" class="form-input">
+        <span class="hidden sm:inline-block">characters</span>
+      </label>
+      <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+        <input data-id="password" class="form-input px-3 py-2 grow min-w-[300px]" type="text" readonly>
+        <div class="flex space-x-2">
+          <button data-id="generate-password" type="button" title="Generate" class="form-button grow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 m-auto"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </button>
+          <button data-id="copy-password" type="button" title="Copy" class="form-button grow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 m-auto"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</section>
+
+<section id="notifications-section" class="absolute w-full pt-2 flex flex-col space-y-2 text-sm">
+</section>
+</body>
+</html>

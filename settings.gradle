@@ -1,0 +1,4 @@
+rootProject.name = 'pass-the-secret'
+include 'backend'
+include 'frontend'
+

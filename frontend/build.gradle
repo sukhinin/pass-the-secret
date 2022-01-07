@@ -1,0 +1,49 @@
+plugins {
+    id 'base'
+    id 'com.github.node-gradle.node' version '3.1.1'
+}
+
+group parent.group
+version parent.version
+
+node {
+    version = '16.13.0'
+    download = true
+}
+
+npm_run_build {
+    inputs.files fileTree('src')
+    inputs.file 'package.json'
+    inputs.file 'package-lock.json'
+    outputs.dir 'dist'
+}
+
+task packageNpmApp(type: Zip) {
+    dependsOn npm_run_build
+    baseName 'frontend'
+    extension 'jar'
+    destinationDir file("${projectDir}/build")
+    from('dist') {
+        into 'static'
+    }
+}
+
+configurations {
+    npmResources
+}
+
+configurations.default.extendsFrom(configurations.npmResources)
+
+artifacts {
+    npmResources(packageNpmApp.archiveFile) {
+        builtBy packageNpmApp
+        type 'jar'
+    }
+}
+
+assemble.dependsOn packageNpmApp
+
+clean {
+    dependsOn npm_run_clean
+    delete packageNpmApp.archivePath
+}
