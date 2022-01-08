@@ -10,7 +10,7 @@ export async function post(url: string, data: any): Promise<any> {
     body: JSON.stringify(data)
   });
 
-  const json = await response.json().catch(() => {});
+  const json = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     const error = json.error ?? "unknown error";
