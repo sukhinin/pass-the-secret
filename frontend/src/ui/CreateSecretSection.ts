@@ -57,7 +57,7 @@ export class CreateSecretSection {
     this.browserEncryptionUnavailableWarning.classList.remove("hidden");
   }
 
-  disablePasswordGenerationFeature() {
+  hidePasswordGeneratorButton() {
     this.showPasswordGeneratorButton.classList.add("hidden");
   }
 }

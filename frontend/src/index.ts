@@ -25,12 +25,15 @@ if (window.location.hash) {
 
 async function onGeneratePassword(constraints: PasswordConstraints) {
   try {
+    ui.disablePasswordGeneratorControls();
     const password = await passwordGenerator.generate(constraints);
     ui.setPassword(password);
   } catch (e) {
     printErrorToConsole(e);
     const message = e instanceof ApplicationError ? e.message : "Unable to generate password.";
     ui.displayErrorNotification(message);
+  } finally {
+    ui.enablePasswordGeneratorControls();
   }
 }
 
@@ -80,6 +83,7 @@ async function onCopyValue(value: string, successMessage: string, errorMessage: 
 
 async function onCreateSecret(secret: string, days: number) {
   try {
+    ui.disableCreateSecretControls();
     const ref = await store.put(secret, days);
     const link = `${window.location.origin}/#${ref.id};${ref.key}`;
     ui.displaySecretLinkSection(link);
@@ -87,6 +91,8 @@ async function onCreateSecret(secret: string, days: number) {
     printErrorToConsole(e);
     const message = e instanceof ApplicationError ? e.message : "Unable to create secret.";
     ui.displayErrorNotification(message);
+  } finally {
+    ui.enableCreateSecretControls();
   }
 }
 

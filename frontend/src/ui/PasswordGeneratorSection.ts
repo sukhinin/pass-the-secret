@@ -93,6 +93,14 @@ export class PasswordGeneratorSection {
     this.password.value = "";
   }
 
+  enable() {
+    this.fieldset.disabled = false;
+  }
+
+  disable() {
+    this.fieldset.disabled = true;
+  }
+
   private handleKeyDown(e: KeyboardEvent) {
     if (e.key === "Escape") {
       e.stopPropagation()

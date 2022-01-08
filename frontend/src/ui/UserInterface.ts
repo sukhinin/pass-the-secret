@@ -32,7 +32,7 @@ export class UserInterface {
 
   private setupEventHandlers() {
     this.createSecretSection.onShowPasswordGenerator = () => {
-      this.createSecretSection.disable();
+      this.disableCreateSecretControls();
       this.passwordGeneratorSection.show();
     };
     this.createSecretSection.onCreateSecret = (secret: string, days: number) => {
@@ -51,8 +51,8 @@ export class UserInterface {
       }
     };
     this.passwordGeneratorSection.onHidePasswordGenerator = () => {
+      this.enableCreateSecretControls();
       this.passwordGeneratorSection.hide();
-      this.createSecretSection.enable();
     };
     this.passwordGeneratorSection.onGeneratePassword = (constraints: PasswordConstraints) => {
       if (this.onGeneratePassword) {
@@ -75,7 +75,24 @@ export class UserInterface {
   }
 
   disablePasswordGenerationFeature() {
-    this.createSecretSection.disablePasswordGenerationFeature();
+    this.createSecretSection.hidePasswordGeneratorButton();
+    this.passwordGeneratorSection.disable();
+  }
+
+  enableCreateSecretControls() {
+    this.createSecretSection.enable();
+  }
+
+  disableCreateSecretControls() {
+    this.createSecretSection.disable();
+  }
+
+  enablePasswordGeneratorControls() {
+    this.passwordGeneratorSection.enable();
+  }
+
+  disablePasswordGeneratorControls() {
+    this.passwordGeneratorSection.disable();
   }
 
   displayCreateSecretSection() {
