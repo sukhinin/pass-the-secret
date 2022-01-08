@@ -4,7 +4,7 @@ export class BrowserCrypto implements Crypto {
 
   constructor() {
     if (!BrowserCrypto.isSupported()) {
-      throw new Error("Browser Crypto API is not supported.")
+      throw new Error("Browser Crypto API is not supported.");
     }
   }
 

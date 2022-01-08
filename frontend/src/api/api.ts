@@ -14,7 +14,7 @@ export async function post(url: string, data: any): Promise<any> {
 
   if (!response.ok) {
     const error = json.error ?? "unknown error";
-    const message = `POST to ${url} failed (${response.statusText} ${response.status}): ${error}`
+    const message = `POST to ${url} failed (${response.statusText} ${response.status}): ${error}`;
     throw new ApiError(message, response.status, response.statusText, error);
   }
 

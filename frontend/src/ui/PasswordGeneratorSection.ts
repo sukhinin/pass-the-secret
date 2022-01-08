@@ -27,7 +27,7 @@ export class PasswordGeneratorSection {
     this.document = root.ownerDocument;
     this.fieldset = root.querySelector("fieldset");
     this.generatePasswordButton = root.querySelector("[data-id='generate-password']");
-    this.copyPasswordButton = root.querySelector("[data-id='copy-password']")
+    this.copyPasswordButton = root.querySelector("[data-id='copy-password']");
     this.lowercaseLettersCheckbox = root.querySelector("[data-id='lowercase-letters']");
     this.uppercaseLettersCheckbox = root.querySelector("[data-id='uppercase-letters']");
     this.digitsCheckbox = root.querySelector("[data-id='digits']");
@@ -44,7 +44,7 @@ export class PasswordGeneratorSection {
       if (this.onHidePasswordGenerator && e.target === this.root) {
         this.onHidePasswordGenerator();
       }
-    }
+    };
     this.fieldset.onchange = () => {
       this.generatePasswordButton.click();
       this.saveUserInterfaceState();
@@ -54,13 +54,13 @@ export class PasswordGeneratorSection {
         const constraints = this.getPasswordConstraints();
         this.onGeneratePassword(constraints);
       }
-    }
+    };
     this.copyPasswordButton.onclick = () => {
       if (this.onCopyPassword) {
         const password = this.password.value;
         this.onCopyPassword(password);
       }
-    }
+    };
   }
 
   private getPasswordConstraints(): PasswordConstraints {
@@ -68,7 +68,7 @@ export class PasswordGeneratorSection {
     const minPasswordLength = parseInt(this.passwordLengthInput.min) || 8;
     const passwordLength = parseInt(this.passwordLengthInput.value) || 16;
 
-    const length = Math.max(minPasswordLength, Math.min(maxPasswordLength, passwordLength))
+    const length = Math.max(minPasswordLength, Math.min(maxPasswordLength, passwordLength));
     if (length.toString() != this.passwordLengthInput.value) {
       this.passwordLengthInput.value = length.toString();
     }
@@ -108,7 +108,7 @@ export class PasswordGeneratorSection {
 
   private handleKeyDown(e: KeyboardEvent) {
     if (e.key === "Escape") {
-      e.stopPropagation()
+      e.stopPropagation();
       if (this.onHidePasswordGenerator) {
         this.onHidePasswordGenerator();
       }

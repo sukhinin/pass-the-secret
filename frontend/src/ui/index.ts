@@ -1,1 +1,1 @@
-export {UserInterface} from "./UserInterface";
+export { UserInterface } from "./UserInterface";

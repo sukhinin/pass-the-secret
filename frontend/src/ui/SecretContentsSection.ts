@@ -9,7 +9,7 @@ export class SecretContentsSection {
   constructor(root: HTMLElement) {
     this.root = root;
     this.secret = root.querySelector("[data-id='secret']");
-    this.copySecretButton = root.querySelector("[data-id='copy-secret']")
+    this.copySecretButton = root.querySelector("[data-id='copy-secret']");
     this.setupEventHandlers();
   }
 
@@ -19,7 +19,7 @@ export class SecretContentsSection {
         const secret = this.secret.value;
         this.onCopySecret(secret);
       }
-    }
+    };
   }
 
   show(secret: string) {

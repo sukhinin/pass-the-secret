@@ -9,7 +9,7 @@ export class SecretLinkSection {
   constructor(root: HTMLElement) {
     this.root = root;
     this.link = root.querySelector("[data-id='link']");
-    this.copyLinkButton = root.querySelector("[data-id='copy-link']")
+    this.copyLinkButton = root.querySelector("[data-id='copy-link']");
     this.setupEventHandlers();
   }
 
@@ -19,7 +19,7 @@ export class SecretLinkSection {
         const link = this.link.value;
         this.onCopyLink(link);
       }
-    }
+    };
   }
 
   show(link: string) {
