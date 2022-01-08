@@ -30,7 +30,7 @@ export class CreateSecretSection {
     this.createSecretButton.onclick = () => {
       if (this.onCreateSecret) {
         const secret = this.secretInput.value;
-        const days = parseInt(this.daysInput.selectedOptions[0].value);
+        const days = parseInt(this.daysInput.value);
         this.onCreateSecret(secret, days);
       }
     };
