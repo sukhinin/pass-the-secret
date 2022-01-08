@@ -32,6 +32,7 @@ export class PasswordGeneratorSection {
     this.passwordLengthInput = root.querySelector("[data-id='password-length']");
     this.password = root.querySelector("[data-id='password']");
     this.keyDownHandler = (e) => this.handleKeyDown(e);
+    this.restoreUserInterfaceState();
     this.setupEventHandlers();
   }
 
@@ -43,6 +44,7 @@ export class PasswordGeneratorSection {
     }
     this.fieldset.onchange = () => {
       this.generatePasswordButton.click();
+      this.saveUserInterfaceState();
     };
     this.generatePasswordButton.onclick = () => {
       if (this.onGeneratePassword) {
@@ -107,6 +109,36 @@ export class PasswordGeneratorSection {
       if (this.onHidePasswordGenerator) {
         this.onHidePasswordGenerator();
       }
+    }
+  }
+
+  private saveUserInterfaceState() {
+    try {
+      const state = {
+        passwordLength: this.passwordLengthInput.value,
+        lowercaseLetters: this.lowercaseLettersCheckbox.checked,
+        uppercaseLetters: this.uppercaseLettersCheckbox.checked,
+        digits: this.digitsCheckbox.checked,
+        specialCharacters: this.specialCharactersCheckbox.checked
+      };
+      const data = JSON.stringify(state);
+      window.localStorage.setItem("password-generator-section", data);
+    } catch {
+      // This is not crucial for operation, ignore any errors.
+    }
+  }
+
+  private restoreUserInterfaceState() {
+    try {
+      const data = window.localStorage.getItem("password-generator-section");
+      const state = JSON.parse(data);
+      this.passwordLengthInput.value = state.passwordLength === undefined ? 12 : state.passwordLength;
+      this.lowercaseLettersCheckbox.checked = state.lowercaseLetters === undefined ? true : state.lowercaseLetters;
+      this.uppercaseLettersCheckbox.checked = state.uppercaseLetters === undefined ? true : state.uppercaseLetters;
+      this.digitsCheckbox.checked = state.digits === undefined ? true : state.digits;
+      this.specialCharactersCheckbox.checked = state.specialCharacters === undefined ? true : state.specialCharacters;
+    } catch {
+      // This is not crucial for operation, ignore any errors.
     }
   }
 }
