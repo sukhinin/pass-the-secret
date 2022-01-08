@@ -24,6 +24,7 @@ export class PasswordGeneratorSection {
   constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
     this.stateStore = stateStore;
+
     this.document = root.ownerDocument;
     this.fieldset = root.querySelector("fieldset");
     this.generatePasswordButton = root.querySelector("[data-id='generate-password']");
@@ -35,6 +36,7 @@ export class PasswordGeneratorSection {
     this.passwordLengthInput = root.querySelector("[data-id='password-length']");
     this.password = root.querySelector("[data-id='password']");
     this.keyDownHandler = (e) => this.handleKeyDown(e);
+
     this.restoreUserInterfaceState();
     this.setupEventHandlers();
   }

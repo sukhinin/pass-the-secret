@@ -25,6 +25,7 @@ export class SecretLinkSection {
   show(link: string) {
     this.link.value = link;
     this.root.classList.remove("hidden");
+    this.copyLinkButton.focus();
   }
 
   hide() {

@@ -57,6 +57,7 @@ export class CreateSecretSection {
 
   show() {
     this.root.classList.remove("hidden");
+    this.secretInput.focus();
   }
 
   hide() {

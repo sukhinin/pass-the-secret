@@ -25,6 +25,7 @@ export class SecretContentsSection {
   show(secret: string) {
     this.secret.value = secret;
     this.root.classList.remove("hidden");
+    this.copySecretButton.focus();
   }
 
   hide() {
