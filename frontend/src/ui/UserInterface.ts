@@ -5,6 +5,7 @@ import { FatalErrorSection } from "./FatalErrorSection";
 import { PasswordGeneratorSection } from "./PasswordGeneratorSection";
 import { PasswordConstraints } from "../passwords/PasswordGenerator";
 import { NotificationsSection } from "./NotificationsSection";
+import { LocalStorageStateStore } from "./LocalStorageStateStore";
 
 export class UserInterface {
   private readonly createSecretSection: CreateSecretSection;
@@ -21,11 +22,11 @@ export class UserInterface {
   onCopyPassword: (password: string) => void;
 
   constructor(document: Document) {
-    this.createSecretSection = new CreateSecretSection(document.getElementById("create-secret-section"));
+    this.createSecretSection = new CreateSecretSection(document.getElementById("create-secret-section"), new LocalStorageStateStore("create-secret-section"));
     this.secretLinkSection = new SecretLinkSection(document.getElementById("secret-link-section"));
     this.secretContentsSection = new SecretContentsSection(document.getElementById("secret-contents-section"));
     this.fatalErrorSection = new FatalErrorSection(document.getElementById("fatal-error-section"));
-    this.passwordGeneratorSection = new PasswordGeneratorSection(document.getElementById("password-generator-section"));
+    this.passwordGeneratorSection = new PasswordGeneratorSection(document.getElementById("password-generator-section"), new LocalStorageStateStore("password-generator-section"));
     this.notificationsSection = new NotificationsSection(document.getElementById("notifications-section"));
     this.setupEventHandlers();
   }

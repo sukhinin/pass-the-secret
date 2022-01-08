@@ -1,5 +1,9 @@
+import { StateStore } from "./StateStore";
+
 export class CreateSecretSection {
+
   private readonly root: HTMLElement;
+  private readonly stateStore?: StateStore;
   private readonly fieldset: HTMLFieldSetElement;
   private readonly secretInput: HTMLTextAreaElement;
   private readonly daysInput: HTMLSelectElement;
@@ -10,14 +14,17 @@ export class CreateSecretSection {
   onShowPasswordGenerator: () => void;
   onCreateSecret: (secret: string, days: number) => void;
 
-  constructor(root: HTMLElement) {
+  constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
+    this.stateStore = stateStore;
+
     this.fieldset = root.querySelector("fieldset");
     this.secretInput = root.querySelector("[data-id='secret']");
     this.daysInput = root.querySelector("[data-id='days']");
     this.showPasswordGeneratorButton = root.querySelector("[data-id='show-password-generator']");
     this.createSecretButton = root.querySelector("[data-id='create-secret']");
     this.browserEncryptionUnavailableWarning = root.querySelector("[data-id='browser-encryption-unavailable-warning']");
+
     this.restoreUserInterfaceState();
     this.setupEventHandlers();
   }
@@ -67,11 +74,9 @@ export class CreateSecretSection {
 
   private saveUserInterfaceState() {
     try {
-      const state = {
+      this.stateStore?.save({
         days: this.daysInput.value
-      };
-      const data = JSON.stringify(state);
-      window.localStorage.setItem("create-secret-section", data);
+      });
     } catch {
       // This is not crucial for operation, ignore any errors.
     }
@@ -79,9 +84,8 @@ export class CreateSecretSection {
 
   private restoreUserInterfaceState() {
     try {
-      const data = window.localStorage.getItem("create-secret-section");
-      const state = JSON.parse(data);
-      this.daysInput.value = state.days === undefined ? 3 : state.days;
+      const state = this.stateStore?.restore();
+      this.daysInput.value = state?.days === undefined ? 3 : state.days;
     } catch {
       // This is not crucial for operation, ignore any errors.
     }

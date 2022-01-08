@@ -1,8 +1,10 @@
 import { PasswordConstraints } from "../passwords/PasswordGenerator";
+import { StateStore } from "./StateStore";
 
 export class PasswordGeneratorSection {
 
   private readonly root: HTMLElement;
+  private readonly stateStore?: StateStore;
   private readonly document: HTMLDocument;
   private readonly fieldset: HTMLFieldSetElement;
   private readonly generatePasswordButton: HTMLButtonElement;
@@ -19,8 +21,9 @@ export class PasswordGeneratorSection {
   onGeneratePassword: (constraints: PasswordConstraints) => void;
   onCopyPassword: (password: string) => void;
 
-  constructor(root: HTMLElement) {
+  constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
+    this.stateStore = stateStore;
     this.document = root.ownerDocument;
     this.fieldset = root.querySelector("fieldset");
     this.generatePasswordButton = root.querySelector("[data-id='generate-password']");
@@ -114,15 +117,13 @@ export class PasswordGeneratorSection {
 
   private saveUserInterfaceState() {
     try {
-      const state = {
+      this.stateStore?.save({
         passwordLength: this.passwordLengthInput.value,
         lowercaseLetters: this.lowercaseLettersCheckbox.checked,
         uppercaseLetters: this.uppercaseLettersCheckbox.checked,
         digits: this.digitsCheckbox.checked,
         specialCharacters: this.specialCharactersCheckbox.checked
-      };
-      const data = JSON.stringify(state);
-      window.localStorage.setItem("password-generator-section", data);
+      });
     } catch {
       // This is not crucial for operation, ignore any errors.
     }
@@ -130,13 +131,12 @@ export class PasswordGeneratorSection {
 
   private restoreUserInterfaceState() {
     try {
-      const data = window.localStorage.getItem("password-generator-section");
-      const state = JSON.parse(data);
-      this.passwordLengthInput.value = state.passwordLength === undefined ? 12 : state.passwordLength;
-      this.lowercaseLettersCheckbox.checked = state.lowercaseLetters === undefined ? true : state.lowercaseLetters;
-      this.uppercaseLettersCheckbox.checked = state.uppercaseLetters === undefined ? true : state.uppercaseLetters;
-      this.digitsCheckbox.checked = state.digits === undefined ? true : state.digits;
-      this.specialCharactersCheckbox.checked = state.specialCharacters === undefined ? true : state.specialCharacters;
+      const state = this.stateStore?.restore();
+      this.passwordLengthInput.value = state?.passwordLength === undefined ? 12 : state.passwordLength;
+      this.lowercaseLettersCheckbox.checked = state?.lowercaseLetters === undefined ? true : state.lowercaseLetters;
+      this.uppercaseLettersCheckbox.checked = state?.uppercaseLetters === undefined ? true : state.uppercaseLetters;
+      this.digitsCheckbox.checked = state?.digits === undefined ? true : state.digits;
+      this.specialCharactersCheckbox.checked = state?.specialCharacters === undefined ? true : state.specialCharacters;
     } catch {
       // This is not crucial for operation, ignore any errors.
     }
