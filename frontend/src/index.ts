@@ -47,39 +47,6 @@ async function onCopyValue(value: string, successMessage: string, errorMessage: 
     ui.displayErrorNotification(message);
   }
 }
-//
-// async function onCopyPassword(password: string) {
-//   try {
-//     await navigator.clipboard.writeText(password);
-//     ui.displayInfoNotification("Password copied to clipboard.");
-//   } catch (e) {
-//     printErrorToConsole(e);
-//     const message = e instanceof ApplicationError ? e.message : "Unable to copy password to clipboard.";
-//     ui.displayErrorNotification(message);
-//   }
-// }
-//
-// async function onCopyLink(link: string) {
-//   try {
-//     await navigator.clipboard.writeText(link);
-//     ui.displayInfoNotification("Link copied to clipboard.");
-//   } catch (e) {
-//     printErrorToConsole(e);
-//     const message = e instanceof ApplicationError ? e.message : "Unable to copy link to clipboard.";
-//     ui.displayErrorNotification(message);
-//   }
-// }
-//
-// async function onCopySecret(secret: string) {
-//   try {
-//     await navigator.clipboard.writeText(secret);
-//     ui.displayInfoNotification("Secret copied to clipboard.");
-//   } catch (e) {
-//     printErrorToConsole(e);
-//     const message = e instanceof ApplicationError ? e.message : "Unable to copy secret to clipboard.";
-//     ui.displayErrorNotification(message);
-//   }
-// }
 
 async function onCreateSecret(secret: string, days: number) {
   try {
