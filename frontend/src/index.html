@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <script defer src="index.ts" type="module"></script>
 </head>
-<body class="relative w-screen h-screen p-24 grid justify-items-center text-gray-700">
+<body class="relative w-screen h-screen p-24 -z-50 grid justify-items-center text-gray-700">
 
 <!-- Create secret section -->
 <section id="create-secret-section" class="hidden p-6 w-full max-w-xl flex flex-col rounded shadow bg-white">
@@ -127,7 +127,16 @@
   </div>
 </section>
 
+<!-- Notification section -->
 <section id="notifications-section" class="absolute w-full pt-2 flex flex-col space-y-2 text-sm">
+</section>
+
+<!-- Version footer -->
+<section class="absolute bottom-0 m-auto py-1 text-sm -z-40">
+  <a href="https://github.com/sukhinin/pass-the-secret-2" target="_blank" tabindex="-1"
+     class="rounded text-xs text-gray-400 outline-none hover:text-gray-600 focus:text-gray-600">
+    Pass the Secret / ##VERSION##
+  </a>
 </section>
 </body>
 </html>
