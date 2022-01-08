@@ -3,6 +3,7 @@ import { PasswordConstraints } from "../passwords/PasswordGenerator";
 export class PasswordGeneratorSection {
 
   private readonly root: HTMLElement;
+  private readonly document: HTMLDocument;
   private readonly fieldset: HTMLFieldSetElement;
   private readonly generatePasswordButton: HTMLButtonElement;
   private readonly copyPasswordButton: HTMLButtonElement;
@@ -12,6 +13,7 @@ export class PasswordGeneratorSection {
   private readonly specialCharactersCheckbox: HTMLInputElement;
   private readonly passwordLengthInput: HTMLInputElement;
   private readonly password: HTMLInputElement;
+  private readonly keyDownHandler: (e: KeyboardEvent) => void;
 
   onHidePasswordGenerator: () => void;
   onGeneratePassword: (constraints: PasswordConstraints) => void;
@@ -19,6 +21,7 @@ export class PasswordGeneratorSection {
 
   constructor(root: HTMLElement) {
     this.root = root;
+    this.document = root.ownerDocument;
     this.fieldset = root.querySelector("fieldset");
     this.generatePasswordButton = root.querySelector("[data-id='generate-password']");
     this.copyPasswordButton = root.querySelector("[data-id='copy-password']")
@@ -28,6 +31,7 @@ export class PasswordGeneratorSection {
     this.specialCharactersCheckbox = root.querySelector("[data-id='special-characters']");
     this.passwordLengthInput = root.querySelector("[data-id='password-length']");
     this.password = root.querySelector("[data-id='password']");
+    this.keyDownHandler = (e) => this.handleKeyDown(e);
     this.setupEventHandlers();
   }
 
@@ -78,12 +82,23 @@ export class PasswordGeneratorSection {
   }
 
   show() {
+    this.document.addEventListener("keydown", this.keyDownHandler);
     this.root.classList.remove("hidden");
     this.generatePasswordButton.click();
   }
 
   hide() {
+    this.document.removeEventListener("keydown", this.keyDownHandler);
     this.root.classList.add("hidden");
     this.password.value = "";
+  }
+
+  private handleKeyDown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.stopPropagation()
+      if (this.onHidePasswordGenerator) {
+        this.onHidePasswordGenerator();
+      }
+    }
   }
 }
