@@ -3,11 +3,14 @@ package com.github.sukhinin.passthesecret
 import com.github.sukhinin.passthesecret.api.RequestHandler
 import com.github.sukhinin.passthesecret.datastore.DataStore
 import com.github.sukhinin.passthesecret.datastore.JdbiDataStoreFactory
-import com.github.sukhinin.passthesecret.endpoints.PlainEndpoint
+import com.github.sukhinin.passthesecret.datastore.MemoryDataStoreFactory
 import com.github.sukhinin.passthesecret.endpoints.EncryptedEndpoint
+import com.github.sukhinin.passthesecret.endpoints.PlainEndpoint
 import com.github.sukhinin.simpleconfig.*
 import org.eclipse.jetty.server.Handler
-import org.eclipse.jetty.server.handler.*
+import org.eclipse.jetty.server.handler.ContextHandler
+import org.eclipse.jetty.server.handler.HandlerList
+import org.eclipse.jetty.server.handler.ResourceHandler
 import org.eclipse.jetty.util.resource.Resource
 import org.slf4j.LoggerFactory
 import java.util.concurrent.Executors
@@ -40,7 +43,12 @@ object Application {
     }
 
     private fun createDataStore(config: Config): DataStore {
-        val dataStore = JdbiDataStoreFactory.create(config.scoped("datastore"))
+        val dataStoreConfig = config.scoped("datastore")
+        val dataStore = when (val type = config.get("datastore")) {
+            "sqlite" -> JdbiDataStoreFactory.create(dataStoreConfig)
+            "memory" -> MemoryDataStoreFactory.create()
+            else -> throw RuntimeException("Unsupported datastore type: $type")
+        }
         executor.scheduleAtFixedRate({ cleanupExpiredSecrets(dataStore) }, 0, 30, TimeUnit.MINUTES)
         return dataStore
     }
