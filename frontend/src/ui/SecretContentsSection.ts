@@ -4,7 +4,7 @@ export class SecretContentsSection {
   private readonly secret: HTMLTextAreaElement;
   private readonly copySecretButton: HTMLButtonElement;
 
-  onCopySecret: (secret: string) => void;
+  onCopySecret: (secret: string) => Promise<void>;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -14,10 +14,15 @@ export class SecretContentsSection {
   }
 
   setupEventHandlers() {
-    this.copySecretButton.onclick = () => {
+    this.copySecretButton.onclick = async () => {
       if (this.onCopySecret) {
-        const secret = this.secret.value;
-        this.onCopySecret(secret);
+        try {
+          this.copySecretButton.disabled = true;
+          const secret = this.secret.value;
+          await this.onCopySecret(secret);
+        } finally {
+          this.copySecretButton.disabled = false;
+        }
       }
     };
   }

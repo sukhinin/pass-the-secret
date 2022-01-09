@@ -25,15 +25,12 @@ if (window.location.hash) {
 
 async function onGeneratePassword(constraints: PasswordConstraints) {
   try {
-    ui.disablePasswordGeneratorControls();
     const password = await passwordGenerator.generate(constraints);
     ui.setPassword(password);
   } catch (e) {
     printErrorToConsole(e);
     const message = e instanceof ApplicationError ? e.message : "Unable to generate password.";
     ui.displayErrorNotification(message);
-  } finally {
-    ui.enablePasswordGeneratorControls();
   }
 }
 

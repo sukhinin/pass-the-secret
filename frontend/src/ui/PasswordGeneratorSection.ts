@@ -18,8 +18,8 @@ export class PasswordGeneratorSection {
   private readonly keyDownHandler: (e: KeyboardEvent) => void;
 
   onHidePasswordGenerator: () => void;
-  onGeneratePassword: (constraints: PasswordConstraints) => void;
-  onCopyPassword: (password: string) => void;
+  onGeneratePassword: (constraints: PasswordConstraints) => Promise<void>;
+  onCopyPassword: (password: string) => Promise<void>;
 
   constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
@@ -51,16 +51,26 @@ export class PasswordGeneratorSection {
       this.generatePasswordButton.click();
       this.saveUserInterfaceState();
     };
-    this.generatePasswordButton.onclick = () => {
+    this.generatePasswordButton.onclick = async () => {
       if (this.onGeneratePassword) {
-        const constraints = this.getPasswordConstraints();
-        this.onGeneratePassword(constraints);
+        try {
+          this.generatePasswordButton.disabled = true;
+          const constraints = this.getPasswordConstraints();
+          await this.onGeneratePassword(constraints);
+        } finally {
+          this.generatePasswordButton.disabled = false;
+        }
       }
     };
-    this.copyPasswordButton.onclick = () => {
+    this.copyPasswordButton.onclick = async () => {
       if (this.onCopyPassword) {
-        const password = this.password.value;
-        this.onCopyPassword(password);
+        try {
+          this.copyPasswordButton.disabled = true;
+          const password = this.password.value;
+          await this.onCopyPassword(password);
+        } finally {
+          this.copyPasswordButton.disabled = false;
+        }
       }
     };
   }

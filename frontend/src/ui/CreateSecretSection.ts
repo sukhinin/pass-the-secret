@@ -12,7 +12,7 @@ export class CreateSecretSection {
   private readonly browserEncryptionUnavailableWarning: HTMLElement;
 
   onShowPasswordGenerator: () => void;
-  onSubmitSecret: (secret: string, days: number) => void;
+  onSubmitSecret: (secret: string, days: number) => Promise<void>;
 
   constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
@@ -38,11 +38,16 @@ export class CreateSecretSection {
         this.onShowPasswordGenerator();
       }
     };
-    this.createSecretButton.onclick = () => {
+    this.createSecretButton.onclick = async () => {
       if (this.onSubmitSecret) {
-        const secret = this.secretInput.value;
-        const days = parseInt(this.daysInput.value);
-        this.onSubmitSecret(secret, days);
+        try {
+          this.createSecretButton.disabled = true;
+          const secret = this.secretInput.value;
+          const days = parseInt(this.daysInput.value);
+          await this.onSubmitSecret(secret, days);
+        } finally {
+          this.createSecretButton.disabled = false;
+        }
       }
     };
   }

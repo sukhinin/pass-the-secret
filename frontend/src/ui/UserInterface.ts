@@ -15,11 +15,11 @@ export class UserInterface {
   private readonly passwordGeneratorSection: PasswordGeneratorSection;
   private readonly notificationsSection: NotificationsSection;
 
-  onSubmitSecret: (secret: string, days: number) => void;
-  onCopyLink: (link: string) => void;
-  onCopySecret: (secret: string) => void;
-  onGeneratePassword: (constraints: PasswordConstraints) => void;
-  onCopyPassword: (password: string) => void;
+  onSubmitSecret: (secret: string, days: number) => Promise<void>;
+  onCopyLink: (link: string) => Promise<void>;
+  onCopySecret: (secret: string) => Promise<void>;
+  onGeneratePassword: (constraints: PasswordConstraints) => Promise<void>;
+  onCopyPassword: (password: string) => Promise<void>;
 
   constructor(document: Document) {
     this.createSecretSection = new CreateSecretSection(document.getElementById("create-secret-section"), new LocalStorageStateStore("create-secret-section"));
@@ -36,34 +36,25 @@ export class UserInterface {
       this.createSecretSection.disable();
       this.passwordGeneratorSection.show();
     };
-    this.createSecretSection.onSubmitSecret = (secret: string, days: number) => {
-      if (this.onSubmitSecret) {
-        this.onSubmitSecret(secret, days);
-      }
-    };
-    this.secretLinkSection.onCopyLink = (link: string) => {
-      if (this.onCopyLink) {
-        this.onCopyLink(link);
-      }
-    };
-    this.secretContentsSection.onCopySecret = (secret: string) => {
-      if (this.onCopySecret) {
-        this.onCopySecret(secret);
-      }
-    };
     this.passwordGeneratorSection.onHidePasswordGenerator = () => {
       this.createSecretSection.enable();
       this.passwordGeneratorSection.hide();
     };
-    this.passwordGeneratorSection.onGeneratePassword = (constraints: PasswordConstraints) => {
-      if (this.onGeneratePassword) {
-        this.onGeneratePassword(constraints);
-      }
+
+    this.createSecretSection.onSubmitSecret = (secret, days) => {
+      return this.onSubmitSecret ? this.onSubmitSecret(secret, days) : Promise.resolve();
     };
-    this.passwordGeneratorSection.onCopyPassword = (password: string) => {
-      if (this.onCopyPassword) {
-        this.onCopyPassword(password);
-      }
+    this.secretLinkSection.onCopyLink = (link) => {
+      return this.onCopyLink ? this.onCopyLink(link) : Promise.resolve();
+    };
+    this.secretContentsSection.onCopySecret = (secret) => {
+      return this.onCopySecret ? this.onCopySecret(secret) : Promise.resolve();
+    };
+    this.passwordGeneratorSection.onGeneratePassword = (constraints) => {
+      return this.onGeneratePassword ? this.onGeneratePassword(constraints) : Promise.resolve();
+    };
+    this.passwordGeneratorSection.onCopyPassword = (password) => {
+      return this.onCopyPassword ? this.onCopyPassword(password) : Promise.resolve();
     };
   }
 
@@ -86,14 +77,6 @@ export class UserInterface {
 
   disableCreateSecretControls() {
     this.createSecretSection.disable();
-  }
-
-  enablePasswordGeneratorControls() {
-    this.passwordGeneratorSection.enable();
-  }
-
-  disablePasswordGeneratorControls() {
-    this.passwordGeneratorSection.disable();
   }
 
   displayCreateSecretSection() {

@@ -4,7 +4,7 @@ export class SecretLinkSection {
   private readonly link: HTMLTextAreaElement;
   private readonly copyLinkButton: HTMLButtonElement;
 
-  onCopyLink: (link: string) => void;
+  onCopyLink: (link: string) => Promise<void>;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -14,10 +14,15 @@ export class SecretLinkSection {
   }
 
   setupEventHandlers() {
-    this.copyLinkButton.onclick = () => {
+    this.copyLinkButton.onclick = async () => {
       if (this.onCopyLink) {
-        const link = this.link.value;
-        this.onCopyLink(link);
+        try {
+          this.copyLinkButton.disabled = true;
+          const link = this.link.value;
+          await this.onCopyLink(link);
+        } finally {
+          this.copyLinkButton.disabled = false;
+        }
       }
     };
   }
