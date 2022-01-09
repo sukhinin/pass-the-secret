@@ -9,11 +9,11 @@ const ui = new UserInterface(document);
 const store = createStore();
 const passwordGenerator = createPasswordGenerator();
 
-ui.onGeneratePassword = (constraints) => onGeneratePassword(constraints);
-ui.onCopyPassword = (password) => onCopyValue(password, "Password copied to clipboard.", "Unable to copy password to clipboard.");
-ui.onSubmitSecret = (secret, days) => onSubmitSecret(secret, days);
-ui.onCopyLink = (link) => onCopyValue(link, "Link copied to clipboard.", "Unable to copy link to clipboard.");
-ui.onCopySecret = (secret) => onCopyValue(secret, "Secret copied to clipboard.", "Unable to copy secret to clipboard.");
+ui.onSubmitSecret = (secret, days) => submitSecret(secret, days);
+ui.onGeneratePassword = (constraints) => generatePassword(constraints);
+ui.onCopyPassword = (password) => copyToClipboard(password, "Password copied to clipboard.", "Unable to copy password to clipboard.");
+ui.onCopyLink = (link) => copyToClipboard(link, "Link copied to clipboard.", "Unable to copy link to clipboard.");
+ui.onCopySecret = (secret) => copyToClipboard(secret, "Secret copied to clipboard.", "Unable to copy secret to clipboard.");
 
 if (window.location.hash) {
   retrieveSecret(window.location.hash.replace("#", ""))
@@ -23,7 +23,7 @@ if (window.location.hash) {
   ui.displayCreateSecretSection();
 }
 
-async function onGeneratePassword(constraints: PasswordConstraints) {
+async function generatePassword(constraints: PasswordConstraints) {
   try {
     const password = await passwordGenerator.generate(constraints);
     ui.setPassword(password);
@@ -34,7 +34,7 @@ async function onGeneratePassword(constraints: PasswordConstraints) {
   }
 }
 
-async function onCopyValue(value: string, successMessage: string, errorMessage: string) {
+async function copyToClipboard(value: string, successMessage: string, errorMessage: string) {
   try {
     await navigator.clipboard.writeText(value);
     ui.displayInfoNotification(successMessage);
@@ -45,7 +45,7 @@ async function onCopyValue(value: string, successMessage: string, errorMessage: 
   }
 }
 
-async function onSubmitSecret(secret: string, days: number) {
+async function submitSecret(secret: string, days: number) {
   try {
     ui.disableCreateSecretControls();
     const ref = await store.put(secret, days);

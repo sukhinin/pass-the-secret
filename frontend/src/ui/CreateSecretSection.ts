@@ -8,7 +8,7 @@ export class CreateSecretSection {
   private readonly secretInput: HTMLTextAreaElement;
   private readonly daysInput: HTMLSelectElement;
   private readonly showPasswordGeneratorButton: HTMLButtonElement;
-  private readonly createSecretButton: HTMLButtonElement;
+  private readonly submitSecretButton: HTMLButtonElement;
   private readonly browserEncryptionUnavailableWarning: HTMLElement;
 
   onShowPasswordGenerator: () => void;
@@ -22,7 +22,7 @@ export class CreateSecretSection {
     this.secretInput = root.querySelector("[data-id='secret']");
     this.daysInput = root.querySelector("[data-id='days']");
     this.showPasswordGeneratorButton = root.querySelector("[data-id='show-password-generator']");
-    this.createSecretButton = root.querySelector("[data-id='create-secret']");
+    this.submitSecretButton = root.querySelector("[data-id='submit-secret']");
     this.browserEncryptionUnavailableWarning = root.querySelector("[data-id='browser-encryption-unavailable-warning']");
 
     this.restoreUserInterfaceState();
@@ -38,15 +38,15 @@ export class CreateSecretSection {
         this.onShowPasswordGenerator();
       }
     };
-    this.createSecretButton.onclick = async () => {
+    this.submitSecretButton.onclick = async () => {
       if (this.onSubmitSecret) {
         try {
-          this.createSecretButton.disabled = true;
+          this.submitSecretButton.disabled = true;
           const secret = this.secretInput.value;
           const days = parseInt(this.daysInput.value);
           await this.onSubmitSecret(secret, days);
         } finally {
-          this.createSecretButton.disabled = false;
+          this.submitSecretButton.disabled = false;
         }
       }
     };
