@@ -15,7 +15,7 @@ export class UserInterface {
   private readonly passwordGeneratorSection: PasswordGeneratorSection;
   private readonly notificationsSection: NotificationsSection;
 
-  onCreateSecret: (secret: string, days: number) => void;
+  onSubmitSecret: (secret: string, days: number) => void;
   onCopyLink: (link: string) => void;
   onCopySecret: (secret: string) => void;
   onGeneratePassword: (constraints: PasswordConstraints) => void;
@@ -36,9 +36,9 @@ export class UserInterface {
       this.createSecretSection.disable();
       this.passwordGeneratorSection.show();
     };
-    this.createSecretSection.onCreateSecret = (secret: string, days: number) => {
-      if (this.onCreateSecret) {
-        this.onCreateSecret(secret, days);
+    this.createSecretSection.onSubmitSecret = (secret: string, days: number) => {
+      if (this.onSubmitSecret) {
+        this.onSubmitSecret(secret, days);
       }
     };
     this.secretLinkSection.onCopyLink = (link: string) => {

@@ -11,7 +11,7 @@ const passwordGenerator = createPasswordGenerator();
 
 ui.onGeneratePassword = (constraints) => onGeneratePassword(constraints);
 ui.onCopyPassword = (password) => onCopyValue(password, "Password copied to clipboard.", "Unable to copy password to clipboard.");
-ui.onCreateSecret = (secret, days) => onCreateSecret(secret, days);
+ui.onSubmitSecret = (secret, days) => onSubmitSecret(secret, days);
 ui.onCopyLink = (link) => onCopyValue(link, "Link copied to clipboard.", "Unable to copy link to clipboard.");
 ui.onCopySecret = (secret) => onCopyValue(secret, "Secret copied to clipboard.", "Unable to copy secret to clipboard.");
 
@@ -48,7 +48,7 @@ async function onCopyValue(value: string, successMessage: string, errorMessage: 
   }
 }
 
-async function onCreateSecret(secret: string, days: number) {
+async function onSubmitSecret(secret: string, days: number) {
   try {
     ui.disableCreateSecretControls();
     const ref = await store.put(secret, days);

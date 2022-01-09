@@ -12,7 +12,7 @@ export class CreateSecretSection {
   private readonly browserEncryptionUnavailableWarning: HTMLElement;
 
   onShowPasswordGenerator: () => void;
-  onCreateSecret: (secret: string, days: number) => void;
+  onSubmitSecret: (secret: string, days: number) => void;
 
   constructor(root: HTMLElement, stateStore?: StateStore) {
     this.root = root;
@@ -39,10 +39,10 @@ export class CreateSecretSection {
       }
     };
     this.createSecretButton.onclick = () => {
-      if (this.onCreateSecret) {
+      if (this.onSubmitSecret) {
         const secret = this.secretInput.value;
         const days = parseInt(this.daysInput.value);
-        this.onCreateSecret(secret, days);
+        this.onSubmitSecret(secret, days);
       }
     };
   }
