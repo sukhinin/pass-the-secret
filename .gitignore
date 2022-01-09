@@ -2,5 +2,6 @@
 .idea
 .gradle
 data
+logs
 *.iml
 *.p12

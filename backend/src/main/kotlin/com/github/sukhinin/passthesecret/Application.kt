@@ -7,7 +7,9 @@ import com.github.sukhinin.passthesecret.datastore.MemoryDataStoreFactory
 import com.github.sukhinin.passthesecret.endpoints.EncryptedEndpoint
 import com.github.sukhinin.passthesecret.endpoints.PlainEndpoint
 import com.github.sukhinin.simpleconfig.*
+import org.eclipse.jetty.server.CustomRequestLog
 import org.eclipse.jetty.server.Handler
+import org.eclipse.jetty.server.RequestLog
 import org.eclipse.jetty.server.handler.ContextHandler
 import org.eclipse.jetty.server.handler.HandlerList
 import org.eclipse.jetty.server.handler.ResourceHandler
@@ -38,6 +40,7 @@ object Application {
         handlers.addHandler(createStaticResourceHandler())
 
         val server = ServerFactory.create(config.scoped("server"))
+        server.requestLog = createRequestLog(config)
         server.handler = handlers
         server.start()
     }
@@ -76,6 +79,17 @@ object Application {
         context.handler = requestHandler
 
         return context
+    }
+
+    private fun createRequestLog(config: Config): RequestLog? {
+        if (!config.contains("access.log")) {
+            return null
+        }
+        val path = config.get("access.log").trim()
+        return when (path.isEmpty()) {
+            true -> CustomRequestLog()
+            else -> CustomRequestLog(path)
+        }
     }
 
     private fun getApplicationConfig(path: String): Config {
