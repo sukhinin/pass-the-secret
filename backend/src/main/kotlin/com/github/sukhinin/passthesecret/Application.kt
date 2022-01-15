@@ -28,11 +28,13 @@ object Application {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        val version = Application::class.java.getPackage().implementationVersion ?: "UNKNOWN"
+        logger.info("Pass-the-Secret version $version")
+
         if (args.size != 1) {
             logger.error("Application requires a single command line argument: path to configuration file")
             exitProcess(1)
         }
-
         val config = getApplicationConfig(args[0])
 
         val dataStore = createDataStore(config)

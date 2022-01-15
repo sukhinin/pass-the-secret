@@ -28,3 +28,9 @@ dependencies {
 application {
     mainClass = 'com.github.sukhinin.passthesecret.Application'
 }
+
+jar {
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
+}
