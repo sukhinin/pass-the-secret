@@ -1,5 +1,6 @@
 package com.github.sukhinin.passthesecret
 
+import com.github.sukhinin.passthesecret.api.HttpException
 import com.github.sukhinin.passthesecret.api.RequestHandler
 import com.github.sukhinin.passthesecret.datastore.DataStore
 import com.github.sukhinin.passthesecret.datastore.JdbiDataStoreFactory
@@ -7,6 +8,7 @@ import com.github.sukhinin.passthesecret.datastore.MemoryDataStoreFactory
 import com.github.sukhinin.passthesecret.endpoints.EncryptedEndpoint
 import com.github.sukhinin.passthesecret.endpoints.PlainEndpoint
 import com.github.sukhinin.simpleconfig.*
+import org.eclipse.jetty.http.HttpStatus
 import org.eclipse.jetty.server.CustomRequestLog
 import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.RequestLog
@@ -36,7 +38,7 @@ object Application {
         val dataStore = createDataStore(config)
 
         val handlers = HandlerList()
-        handlers.addHandler(createApiRequestHandler(dataStore))
+        handlers.addHandler(createApiRequestHandler(config, dataStore))
         handlers.addHandler(createStaticResourceHandler())
 
         val server = ServerFactory.create(config.scoped("server"))
@@ -63,12 +65,21 @@ object Application {
         return resourceHandler
     }
 
-    private fun createApiRequestHandler(dataStore: DataStore): Handler {
+    private fun createApiRequestHandler(config: Config, dataStore: DataStore): Handler {
         val requestHandler = RequestHandler()
 
-        val plainEndpoint = PlainEndpoint(dataStore)
-        requestHandler.registerEndpoint("/plain/put", plainEndpoint::put)
-        requestHandler.registerEndpoint("/plain/get", plainEndpoint::get)
+        if (config.getBooleanOrDefault("backend.crypto.enabled", false)) {
+            logger.info("Backend crypto support is enabled")
+            val plainEndpoint = PlainEndpoint(dataStore)
+            requestHandler.registerEndpoint("/plain/put", plainEndpoint::put)
+            requestHandler.registerEndpoint("/plain/get", plainEndpoint::get)
+        } else {
+            val status = HttpStatus.Code.FORBIDDEN
+            val message = "Disabled by administrator"
+            logger.info("Backend crypto support is disabled, will respond with ${status.code} ${status.message}")
+            requestHandler.registerEndpoint("/plain/put") { throw HttpException(status.code, message) }
+            requestHandler.registerEndpoint("/plain/get") { throw HttpException(status.code, message) }
+        }
 
         val encryptedEndpoint = EncryptedEndpoint(dataStore)
         requestHandler.registerEndpoint("/encrypted/put", encryptedEndpoint::put)
