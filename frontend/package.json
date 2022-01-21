@@ -3,7 +3,6 @@
   "scripts": {
     "dev": "parcel serve src/styles.css src/*.html",
     "build": "parcel build src/styles.css src/*.html",
-    "postbuild": "version.sh dist/*.html",
     "clean": "rimraf dist .parcel-cache"
   },
   "devDependencies": {
