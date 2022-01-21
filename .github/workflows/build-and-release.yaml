@@ -1,0 +1,29 @@
+name: build-and-release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build
+        run: ./gradlew clean build
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./backend/build/distributions/*.tar
+            ./backend/build/distributions/*.zip
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
